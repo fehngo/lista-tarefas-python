@@ -1,5 +1,4 @@
 Beber agua;True
 Dormir cedo;False
-Jantar;False
 Comprar carro;False
 Pintar parede;False

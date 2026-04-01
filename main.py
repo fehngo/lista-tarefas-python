@@ -81,6 +81,40 @@ while True:
 
     if escolha == 4:
         funcoes.cabecalho("Remover Terefas")
+
+        tarefas = funcoes.ler_arquivo(arq)
+        if tarefas:
+            for i, linha in enumerate(tarefas):
+                descricao, sit = linha.strip().split(";")
+                if sit == "True":
+                    print(f"{i+1} - [x] {descricao}")
+                else:
+                    print(f"{i+1} - [ ] {descricao}")
+        else:
+            print("Lista de tarefas vazia!")
+        print("")
+
+        index = funcoes.leia_int("Qual o número da tarefa que você deseja remover?: ")
+        texto = funcoes.ler_linhas(arq)
+        nova_lista = list()
+
+        if texto:
+            for i, linha in enumerate(texto):
+                if i + 1 == index:
+                    pass
+                else:
+                    nova_lista.append(linha.strip())
+
+            funcoes.zerar_lista(arq)
+            for valor in nova_lista:
+                funcoes.marcar(arq, valor)
+
+        else:
+            print("Adicione tarefas a lista antes!")
+
+        print("Tarefa removida com sucesso!")
+        print("")
+        print("")
         sleep(2)
     if escolha == 5:
         funcoes.cabecalho("Saindo")
