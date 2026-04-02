@@ -4,6 +4,7 @@ import funcoes
 arq = "banco.txt"
 
 funcoes.verifica_banco(arq)
+
 while True:
     escolha = funcoes.menu(
         "Adicionar Tarefas",
@@ -12,102 +13,93 @@ while True:
         "Remover Tarefas",
         "Sair",
     )
+
     if escolha == 1:
         funcoes.cabecalho("Adicionar Tarefas")
-        resposta = (
-            input("Qual tarefa você deseja adicionar a lista?: ").strip().capitalize()
-        )
-        funcoes.adicionar_tarefas(arq, resposta)
-        print("")
-        print("")
-        sleep(2)
+
+        while True:
+            descricao = (
+                input("Qual tarefa você deseja adicionar a lista?: ")
+                .strip()
+                .capitalize()
+            )
+            if descricao == "":
+                print("Erro, a tarefa não pode eestar vazia!")
+            else:
+                break
+
+        funcoes.adicionar_tarefas(arq, descricao)
 
     if escolha == 2:
         funcoes.cabecalho("Lista de Tarefas")
-        tarefas = funcoes.ler_arquivo(arq)
+        tarefas = funcoes.carregar_tarefas(arq)
+        contador = 1
+
         if tarefas:
-            for i, linha in enumerate(tarefas):
-                descricao, sit = linha.strip().split(";")
-                if sit == "True":
-                    print(f"{i+1} - [x] {descricao}")
+            for i, v in enumerate(tarefas, start=1):
+                if v["concluida"]:
+                    status = "[x]"
                 else:
-                    print(f"{i+1} - [ ] {descricao}")
+                    status = "[ ]"
+                print(f"{i} - {status} - {v['descricao']}")
         else:
             print("Lista de tarefas vazia!")
+
         print("")
         print("")
         sleep(2)
 
     if escolha == 3:
         funcoes.cabecalho("Marcar Tarefas Concluidas")
+        tarefas = funcoes.carregar_tarefas(arq)
 
-        tarefas = funcoes.ler_arquivo(arq)
         if tarefas:
-            for i, linha in enumerate(tarefas):
-                descricao, sit = linha.strip().split(";")
-                if sit == "True":
-                    print(f"{i+1} - [x] {descricao}")
+            for i, v in enumerate(tarefas, start=1):
+                if v["concluida"]:
+                    status = "[x]"
                 else:
-                    print(f"{i+1} - [ ] {descricao}")
+                    status = "[ ]"
+                print(f"{i} - {status} - {v['descricao']}")
+
+            while True:
+                index = funcoes.leia_int(
+                    "Qual o número da tarefa que você deseja marcar como concluida?: "
+                )
+                if 0 < index <= len(tarefas):
+                    break
+                else:
+                    print("Erro, essa tarefa não existe")
+
+            funcoes.marcar_concluida(arq, index)
         else:
             print("Lista de tarefas vazia!")
-        print("")
 
-        index = funcoes.leia_int(
-            "Qual o número da tarefa que você deseja marcar como concluida?: "
-        )
-        texto = funcoes.ler_linhas(arq)
-        nova_lista = list()
-
-        if texto:
-            for i, linha in enumerate(texto):
-                if i + 1 == index:
-                    descricao, sit = linha.strip().split(";")
-                    nova_lista.insert(0, f"{descricao};{True}")
-                else:
-                    nova_lista.append(linha.strip())
-
-            funcoes.zerar_lista(arq)
-            for valor in nova_lista:
-                funcoes.marcar(arq, valor)
-
-        else:
-            print("Adicione tarefas a lista antes!")
-
-        print("Tarefa marcada com sucesso!")
         print("")
         print("")
         sleep(2)
 
     if escolha == 4:
-        funcoes.cabecalho("Remover Terefas")
+        funcoes.cabecalho("Remover Tarefas")
+        tarefas = funcoes.carregar_tarefas(arq)
 
-        tarefas = funcoes.ler_arquivo(arq)
         if tarefas:
-            for i, linha in enumerate(tarefas):
-                descricao, sit = linha.strip().split(";")
-                if sit == "True":
-                    print(f"{i+1} - [x] {descricao}")
+            for i, v in enumerate(tarefas, start=1):
+                if v["concluida"]:
+                    status = "[x]"
                 else:
-                    print(f"{i+1} - [ ] {descricao}")
-        else:
-            print("Lista de tarefas vazia!")
-        print("")
+                    status = "[ ]"
+                print(f"{i} - {status} - {v['descricao']}")
 
-        index = funcoes.leia_int("Qual o número da tarefa que você deseja remover?: ")
-        texto = funcoes.ler_linhas(arq)
-        nova_lista = list()
-
-        if texto:
-            for i, linha in enumerate(texto):
-                if i + 1 == index:
-                    pass
+            while True:
+                index = funcoes.leia_int(
+                    "Qual o número da tarefa que você deseja remover?: "
+                )
+                if 0 < index <= len(tarefas):
+                    break
                 else:
-                    nova_lista.append(linha.strip())
+                    print("Erro, essa tarefa não existe")
 
-            funcoes.zerar_lista(arq)
-            for valor in nova_lista:
-                funcoes.marcar(arq, valor)
+            funcoes.remover_tarefas(arq, index)
 
         else:
             print("Adicione tarefas a lista antes!")
@@ -116,6 +108,7 @@ while True:
         print("")
         print("")
         sleep(2)
+
     if escolha == 5:
         funcoes.cabecalho("Saindo")
         sleep(2)

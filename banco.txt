@@ -1,4 +1,4 @@
-Beber agua;True
-Dormir cedo;False
+Dormir cedo;True
 Comprar carro;False
 Pintar parede;False
+Fazer tarefa;True
